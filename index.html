@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema POS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
+        <!-- Header -->
+        <header class="flex justify-between items-center pb-4 border-b">
+            <h1 class="text-2xl font-bold">Sistema POS</h1>
+            <button class="text-xl p-2 rounded-full bg-gray-200 hover:bg-gray-300">
+                🔄
+            </button>
+        </header>
+        
+        <!-- Navigation Tabs -->
+        <div class="flex justify-start mt-4">
+            <button id="ventaTab" onclick="showVenta()" class="px-4 py-2 font-semibold text-gray-600 bg-gray-200 hover:bg-gray-300 rounded-l-lg">Punto de Venta</button>
+            <button id="inventarioTab" onclick="showInventario()" class="px-4 py-2 font-semibold text-white bg-black rounded-r-lg">Inventario</button>
+        </div>
+
+        <!-- Punto de Venta -->
+        <div id="puntoDeVenta" class="mt-6 hidden">
+            <h2 class="text-xl font-bold">Punto de Venta</h2>
+            <p class="text-gray-500 mb-4">Realiza ventas y gestiona el carrito</p>
+            <div class="grid grid-cols-2 gap-4">
+                <!-- Products -->
+                <div>
+                    <h3 class="text-lg font-bold">Productos</h3>
+                    <table class="w-full text-left border-collapse mt-2">
+                        <thead>
+                            <tr>
+                                <th class="border-b pb-2">Nombre</th>
+                                <th class="border-b pb-2">Precio</th>
+                                <th class="border-b pb-2">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="py-2">Producto 1</td>
+                                <td>$10.99</td>
+                                <td>
+                                    <button onclick="addToCart('Producto 1', 10.99)" class="px-4 py-1 text-white bg-black rounded hover:bg-gray-800">Agregar</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="py-2">Producto 2</td>
+                                <td>$15.99</td>
+                                <td>
+                                    <button onclick="addToCart('Producto 2', 15.99)" class="px-4 py-1 text-white bg-black rounded hover:bg-gray-800">Agregar</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="py-2">Producto 3</td>
+                                <td>$5.99</td>
+                                <td>
+                                    <button onclick="addToCart('Producto 3', 5.99)" class="px-4 py-1 text-white bg-black rounded hover:bg-gray-800">Agregar</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Cart -->
+                <div>
+                    <h3 class="text-lg font-bold">Carrito</h3>
+                    <table class="w-full text-left border-collapse mt-2">
+                        <thead>
+                            <tr>
+                                <th class="border-b pb-2">Producto</th>
+                                <th class="border-b pb-2">Cantidad</th>
+                                <th class="border-b pb-2">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cartTable">
+                            <!-- Cart Items Will Appear Here -->
+                        </tbody>
+                    </table>
+                    <p class="text-right mt-4 text-xl font-semibold">Total: $<span id="total">0.00</span></p>
+                    <button onclick="finalizeSale()" class="w-full py-2 mt-2 text-white bg-black rounded hover:bg-gray-800">Finalizar Venta</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gestión de Inventario -->
+        <div id="gestionInventario" class="mt-6">
+            <h2 class="text-xl font-bold">Gestión de Inventario</h2>
+            <p class="text-gray-500 mb-4">Administra los productos y su stock</p>
+            <table class="w-full text-left border-collapse mt-2">
+                <thead>
+                    <tr>
+                        <th class="border-b pb-2">Nombre</th>
+                        <th class="border-b pb-2">Precio</th>
+                        <th class="border-b pb-2">Stock</th>
+                        <th class="border-b pb-2">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="py-2">Producto 1</td>
+                        <td>$10.99</td>
+                        <td>50</td>
+                        <td>
+                            <button class="px-4 py-1 text-white bg-blue-500 rounded hover:bg-blue-600">Editar</button>
+                            <button class="px-4 py-1 text-white bg-red-500 rounded hover:bg-red-600">Eliminar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="py-2">Producto 2</td>
+                        <td>$15.99</td>
+                        <td>30</td>
+                        <td>
+                            <button class="px-4 py-1 text-white bg-blue-500 rounded hover:bg-blue-600">Editar</button>
+                            <button class="px-4 py-1 text-white bg-red-500 rounded hover:bg-red-600">Eliminar</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="py-2">Producto 3</td>
+                        <td>$5.99</td>
+                        <td>100</td>
+                        <td>
+                            <button class="px-4 py-1 text-white bg-blue-500 rounded hover:bg-blue-600">Editar</button>
+                            <button class="px-4 py-1 text-white bg-red-500 rounded hover:bg-red-600">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function showVenta() {
+            document.getElementById('puntoDeVenta').classList.remove('hidden');
+            document.getElementById('gestionInventario').classList.add('hidden');
+            document.getElementById('ventaTab').classList.add('bg-black', 'text-white');
+            document.getElementById('inventarioTab').classList.remove('bg-black', 'text-white');
+            document.getElementById('inventarioTab').classList.add('bg-gray-200', 'text-gray-600');
+        }
+
+        function showInventario() {
+            document.getElementById('gestionInventario').classList.remove('hidden');
+            document.getElementById('puntoDeVenta').classList.add('hidden');
+            document.getElementById('inventarioTab').classList.add('bg-black', 'text-white');
+            document.getElementById('ventaTab').classList.remove('bg-black', 'text-white');
+            document.getElementById('ventaTab').classList.add('bg-gray-200', 'text-gray-600');
+        }
+
+        // Cart functionality for "Punto de Venta"
+        let cart = [];
+
+        function addToCart(productName, productPrice) {
+            const existingProduct = cart.find(item => item.name === productName);
+            if (existingProduct) {
+                existingProduct.quantity += 1;
+                existingProduct.subtotal = (existingProduct.quantity * productPrice).toFixed(2);
+            } else {
+                cart.push({
+                    name: productName,
+                    quantity: 1,
+                    subtotal: productPrice.toFixed(2),
+                });
+            }
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartTable = document.getElementById('cartTable');
+            const totalElement = document.getElementById('total');
+            cartTable.innerHTML = '';
+            let total = 0;
+
+            cart.forEach(item => {
+                const row = `
+                    <tr>
+                        <td>${item.name}</td>
+                        <td>${item.quantity}</td>
+                        <td>$${item.subtotal}</td>
+                    </tr>
+                `;
+                cartTable.innerHTML += row;
+                total += parseFloat(item.subtotal);
+            });
+
+            totalElement.textContent = total.toFixed(2);
+        }
+
+        function finalizeSale() {
+            if (cart.length === 0) {
+                alert('El carrito está vacío.');
+                return;
+            }
+            alert('Venta finalizada con éxito.');
+            cart = [];
+            updateCart();
+        }
+    </script>
+</body>
+</html>
